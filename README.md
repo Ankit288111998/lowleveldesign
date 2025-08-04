@@ -44,8 +44,3 @@ Design Principles: OOP, SOLID
 
 Patterns Used: Singleton, Strategy, Factory (where applicable)
 
-src/
-├── logging/       # Logging system implementation
-├── urlshortener/  # URL shortener LLD
-├── ratelimiter/   # Rate limiter logic
-└── urlshortnersha256/ # URL shortener LLD
