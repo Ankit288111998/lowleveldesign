@@ -1,0 +1,31 @@
+LLD Interview Pitch — Rate Limiter (Fixed Window Approach)
+I'm implementing a per-user Fixed Window Rate Limiter. The use case is to prevent users from overwhelming an API — for example, allowing only 5 requests per 10 seconds per user.
+
+I designed a class called RateLimiter that internally uses a ConcurrentHashMap<String, UserRequestInfo>. Each user is mapped to a UserRequestInfo object which stores:
+
+The timestamp of the current window
+
+The count of requests in that window
+
+When a request comes in, I check:
+
+If the current time is still within the window and the request count is within the allowed limit → allow and increment
+
+If the window has expired → reset the timestamp and count
+
+The logic is thread-safe using synchronized blocks per user. This avoids race conditions while still being scalable across users.
+
+I chose Fixed Window for its simplicity and low memory usage. But I also understand it allows bursts at window boundaries, so it's not ideal for all use cases.
+
+If more accuracy is needed, I’d switch to a Sliding Window using a queue of timestamps, or a Token Bucket for smoother throttling and burst tolerance.
+
+In production, I'd go further:
+
+Use Redis for a distributed rate limiter, especially in microservice environments
+
+Or leverage API Gateways like Spring Cloud Gateway or Kong to externalize rate limiting
+
+If doing it within a service, I’d use a Spring Boot Interceptor to wrap API calls
+
+This design covers both correctness and extensibility while being easy to scale and reason about.
+I can walk through the Java code if you'd like, or we can discuss how to extend this to distributed systems using Redis Lua scripts.
